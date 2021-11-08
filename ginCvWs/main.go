@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"gocv.io/x/gocv"
 )
 
 var upgrader = websocket.Upgrader{
@@ -22,104 +25,85 @@ var upgrader = websocket.Upgrader{
 // 	}
 // }
 
-// func reader(conn *websocket.Conn) {
-// 	Img := []byte{}
-// 	for {
-// 		_, p, err := conn.ReadMessage()
-// 		fmt.Println(string(p))
-// 		if err != nil {
-// 			log.Println(err)
-// 			return
-// 		}
-
-// 		if string(p) == "Taking selfie" {
-// 			webcam, err := gocv.OpenVideoCapture(0)
-// 			time.Sleep(1 * time.Second)
-// 			if err != nil {
-// 				fmt.Printf("Error opening video capture device: %v\n", 0)
-// 				return
-// 			}
-// 			img := gocv.NewMat()
-
-// 			if ok := webcam.Read(&img); !ok {
-// 				fmt.Printf("Device closed: %v\n", 0)
-// 				return
-// 			}
-// 			if err := webcam.Close(); err != nil {
-// 				log.Println(err)
-// 				return
-// 			}
-// 			if img.Empty() {
-// 				fmt.Println("img is empty")
-// 				return
-// 			}
-
-// 			err = webcam.Close()
-// 			if err != nil {
-// 				fmt.Println("Weee?? ", err)
-// 				return
-// 			}
-
-// 			w, err := conn.NextWriter(websocket.BinaryMessage)
-// 			if err != nil {
-// 				log.Println(err)
-// 				return
-// 			}
-
-// 			fmt.Println(img.Type()) //CV8UC3
-// 			buf, err := gocv.IMEncode(".jpg", img)
-// 			if err != nil {
-// 				log.Println(err)
-// 				return
-// 			}
-// 			if err := img.Close(); err != nil {
-// 				log.Println(err)
-// 				return
-// 			}
-// 			Img = buf.GetBytes()
-// 			n, err := w.Write(buf.GetBytes())
-// 			buf.Close()
-// 			if err != nil {
-// 				log.Println(err)
-// 				return
-// 			}
-// 			fmt.Printf("%v bytes image is written", n)
-
-// 			if err := w.Close(); err != nil {
-// 				log.Println(err)
-// 				return
-// 			}
-
-// 		} else if string(p) == "Saving selfie" {
-// 			fmt.Println("要存照片囉！！")
-
-// 			err = os.WriteFile("self.jpg", Img, os.ModePerm)
-// 			if err != nil {
-// 				log.Println(err)
-// 				return
-// 			}
-// 		}
-// 	}
-// }
 func messageHandler(conn *websocket.Conn) {
-	_, p, err := conn.ReadMessage()
-	if err != nil {
-		log.Println(err)
+	Img := []byte{}
+	for {
+		_, p, err := conn.ReadMessage()
+		fmt.Println(string(p))
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		if string(p) == "Taking selfie" {
+			webcam, err := gocv.OpenVideoCapture(0)
+			time.Sleep(1 * time.Second)
+			if err != nil {
+				fmt.Printf("Error opening video capture device: %v\n", 0)
+				return
+			}
+			img := gocv.NewMat()
+
+			if ok := webcam.Read(&img); !ok {
+				fmt.Printf("Device closed: %v\n", 0)
+				return
+			}
+			if err := webcam.Close(); err != nil {
+				log.Println(err)
+				return
+			}
+			if img.Empty() {
+				fmt.Println("img is empty")
+				return
+			}
+
+			err = webcam.Close()
+			if err != nil {
+				fmt.Println("Weee?? ", err)
+				return
+			}
+
+			w, err := conn.NextWriter(websocket.BinaryMessage)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+
+			fmt.Println(img.Type()) //CV8UC3
+			buf, err := gocv.IMEncode(".jpg", img)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			if err := img.Close(); err != nil {
+				log.Println(err)
+				return
+			}
+			Img = buf.GetBytes()
+			n, err := w.Write(buf.GetBytes())
+			buf.Close()
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			fmt.Printf("%v bytes image is written", n)
+
+			if err := w.Close(); err != nil {
+				log.Println(err)
+				return
+			}
+
+		} else if string(p) == "Saving selfie" {
+			fmt.Println("要存照片囉！！")
+
+			err = os.WriteFile("self.jpg", Img, os.ModePerm)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+		}
 	}
-	fmt.Println(string(p))
 }
-
-// func wsEndpoint(w http.ResponseWriter, r *http.Request) {
-
-// 	ws, err := upgrader.Upgrade(w, r, nil)
-// 	if err != nil {
-// 		log.Println(err)
-// 		return
-// 	}
-// 	log.Println("客戶端連接")
-
-// 	reader(ws)
-// }
 
 func wsEndpoint(c *gin.Context) {
 	ws, err := upgrader.Upgrade(c.Writer, c.Request, nil)
