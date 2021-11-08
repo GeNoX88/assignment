@@ -31,7 +31,7 @@ func messageHandler(conn *websocket.Conn) {
 		_, p, err := conn.ReadMessage()
 		fmt.Println(string(p))
 		if err != nil {
-			log.Println(err)
+			log.Println("ReadMessage報錯", err)
 			return
 		}
 
@@ -49,7 +49,7 @@ func messageHandler(conn *websocket.Conn) {
 				return
 			}
 			if err := webcam.Close(); err != nil {
-				log.Println(err)
+				log.Println("webcam.Close報錯", err)
 				return
 			}
 			if img.Empty() {
@@ -57,48 +57,31 @@ func messageHandler(conn *websocket.Conn) {
 				return
 			}
 
-			err = webcam.Close()
-			if err != nil {
-				fmt.Println("Weee?? ", err)
-				return
-			}
-
-			w, err := conn.NextWriter(websocket.BinaryMessage)
-			if err != nil {
-				log.Println(err)
-				return
-			}
-
 			fmt.Println(img.Type()) //CV8UC3
 			buf, err := gocv.IMEncode(".jpg", img)
 			if err != nil {
-				log.Println(err)
+				log.Println("img編碼成buf時報錯", err)
 				return
 			}
 			if err := img.Close(); err != nil {
-				log.Println(err)
+				log.Println("img.Close報錯", err)
 				return
 			}
 			Img = buf.GetBytes()
-			n, err := w.Write(buf.GetBytes())
+			if err := conn.WriteMessage(websocket.BinaryMessage, buf.GetBytes()); err != nil {
+				if err != nil {
+					log.Println("WriteMessage報錯", err)
+					return
+				}
+			}
 			buf.Close()
-			if err != nil {
-				log.Println(err)
-				return
-			}
-			fmt.Printf("%v bytes image is written", n)
-
-			if err := w.Close(); err != nil {
-				log.Println(err)
-				return
-			}
 
 		} else if string(p) == "Saving selfie" {
 			fmt.Println("要存照片囉！！")
 
 			err = os.WriteFile("self.jpg", Img, os.ModePerm)
 			if err != nil {
-				log.Println(err)
+				log.Println("將Img存成jpg檔時報錯", err)
 				return
 			}
 		}
@@ -108,7 +91,7 @@ func messageHandler(conn *websocket.Conn) {
 func wsEndpoint(c *gin.Context) {
 	ws, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
-		log.Println(err)
+		log.Println("將request做upgrade時報錯", err)
 		return
 	}
 	log.Println("客戶端連接")
@@ -123,6 +106,9 @@ func main() {
 	r.LoadHTMLGlob("./public/*")
 	r.Static("/ginCvWs", "./")
 	r.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", nil)
+	})
+	r.NoRoute(func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
 	r.GET("/ws", wsEndpoint)
