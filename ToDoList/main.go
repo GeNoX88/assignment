@@ -78,12 +78,17 @@ func main() {
 		var B Todo
 		var C Todo
 		var D Todo
-		db.First(&A, i*4-3)
-		db.First(&B, i*4-2)
-		db.First(&C, i*4-1)
-		db.First(&D, i*4)
+		// db.First(&A, i*4-3)
+		// db.First(&B, i*4-2)
+		// db.First(&C, i*4-1)
+		// db.First(&D, i*4)
+		db.Offset(i*4 - 4).First(&A)
+		db.Offset(i*4 - 3).First(&B)
+		db.Offset(i*4 - 2).First(&C)
+		db.Offset(i*4 - 1).First(&D)
 
-		c.HTML(http.StatusOK, "index.html", gin.H{"one": A.Name, "two": B.Name, "three": C.Name, "four": D.Name})
+		c.HTML(http.StatusOK, "index.html",
+			gin.H{"one": A.Name, "two": B.Name, "three": C.Name, "four": D.Name})
 
 	})
 	r.POST("/", func(c *gin.Context) {
@@ -97,7 +102,21 @@ func main() {
 		db.First(&B, 2)
 		db.First(&C, 3)
 		db.First(&D, 4)
-		c.HTML(http.StatusOK, "index.html", gin.H{"one": A.Name, "two": B.Name, "three": C.Name, "four": D.Name})
+		c.HTML(http.StatusOK, "index.html",
+			gin.H{"one": A.Name, "two": B.Name, "three": C.Name, "four": D.Name})
+	})
+	r.POST("/", func(c *gin.Context) {
+		name := c.PostForm("name")
+		var A Todo
+		var B Todo
+		var C Todo
+		var D Todo
+		db.First(&A)
+		db.Offset(1).First(&B)
+		db.Offset(2).First(&C)
+		db.Offset(3).First(&D)
+		c.HTML(http.StatusOK, "index.html",
+			gin.H{"one": A.Name, "two": B.Name, "three": C.Name, "four": D.Name})
 	})
 	r.NoRoute(func(c *gin.Context) {
 		var A Todo
