@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 style="text-align: center">ToDoList</h1>
+    <form style="text-align: center" action="/" method="post">
+      <div>
+        <input type="text" name="name" id="name" />
+        <button type="submit">添加</button>
+      </div>
+    </form>
+    <form action="/" method="delete">
+      <ul>
+        <li>{{.one}}<input type="submit" name="delete1" value="刪除" /></li>
+        <li>{{.two}}<input type="submit" name="delete2" value="刪除" /></li>
+        <li>{{.three}}<input type="submit" name="delete3" value="刪除" /></li>
+        <li>{{.four}}<input type="submit" name="delete4" value="刪除" /></li>
+      </ul>
+    </form>
+    <div style="text-align: center"></div>
+
+    <div style="text-align: center">
+      <input type="button" onclick="javascript:location.href='/1'" value="1" />
+      <input type="button" onclick="javascript:location.href='/2'" value="2" />
+      <input type="button" onclick="javascript:location.href='/3'" value="3" />
+      <input type="button" onclick="javascript:location.href='/4'" value="4" />
+      <input type="button" onclick="javascript:location.href='/1'" value="5" />
+      <input type="button" onclick="javascript:location.href='/1'" value="6" />
+      <input type="button" onclick="javascript:location.href='/1'" value="7" />
+      <input type="button" onclick="javascript:location.href='/1'" value="8" />
+      <input type="button" onclick="javascript:location.href='/1'" value="9" />
+      <input type="button" onclick="javascript:location.href='/1'" value="10" />
+    </div>
+  </body>
+</html>
