@@ -1,47 +1,70 @@
-let socket = new WebSocket("ws://127.0.0.1:8080/ws");
-console.log("Attempting Connection...");
+var whichPage = document.getElementById("whichPage").innerText;
+console.log(`目前在第${whichPage}頁`);
 
-socket.onopen = (capture) => {
-  console.log("Successfully Connected");
-  socket.send("Hi from the client!");
-};
-
-socket.onclose = (event) => {
-  console.log("Socket Closed Connection: ", event);
-  socket.send("Client Closed!");
-};
-
-socket.onmessage = (e) => {
-  const capture = document.getElementById("capture");
-  const imgdom = document.getElementById("img");
-  let data = e.data;
-  console.log(data)
-  if (data.size > 1000) {
-    let blob = new Blob([data], { type: "image/jpeg" });
-    console.log(blob);
-    function createImageFromBlob(img, b) {
-      imgdom.src = URL.createObjectURL(b);
-      imgdom.onload = () => {
-        URL.revokeObjectURL(imgdom.src);
-      };
-    }
-    const reader = new FileReader();
-    reader.readAsDataURL(blob);
-    // console.log(reader.result)
-    capture.addEventListener(
-      "click",
-      createImageFromBlob(imgdom, blob),
-      false
-    );
-  }
-};
-
-socket.onerror = (error) => {
-  console.log("Socket Error: ", error);
-};
-function captureHandler() {
-  socket.send("Taking selfie");
+function updateHandler(x) {
+  var newName = document.getElementById(x).value;
+  fetch(`/${whichPage}`, {
+    method: "PUT",
+    body: JSON.stringify({ WhichPage: whichPage, Number: x, NewName: newName }),
+    headers: {
+      "content-type": "application/json",
+    },
+  });
 }
-function saveHandler() {
-  socket.send("Saving selfie");
+
+function delete1Handler() {
+  fetch(`/${whichPage}`, {
+    method: "DELETE",
+    body: JSON.stringify({
+      WhichPage: whichPage,
+      Number: "1",
+    }),
+    headers: {
+      "content-type": "application/json",
+    },
+
+  }).then((response) => window.location.href="/1");
+}
+function delete2Handler() {
+  fetch(`/${whichPage}`, {
+    method: "DELETE",
+    body: JSON.stringify({
+      WhichPage: whichPage,
+      Number: "2",
+    }),
+    redirect: "manual",
+    headers: {
+      "content-type": "application/json",
+    }.then((response) => window.location.href="/1")
+  });
+}
+function delete3Handler() {
+  var newName = document.getElementById(3).value;
+  fetch(`/${whichPage}`, {
+    method: "DELETE",
+    body: JSON.stringify({
+      WhichPage: whichPage,
+      Number: "3",
+      NewName: newName,
+    }),
+    redirect: "manual",
+    headers: {
+      "content-type": "application/json",
+    }.then((response) => window.location.href="/1")
+  });
+}
+function delete4Handler() {
+  var newName = document.getElementById(4).value;
+  fetch(`/${whichPage}`, {
+    method: "DELETE",
+    body: JSON.stringify({
+      WhichPage: whichPage,
+      Number: "4",
+      NewName: newName,
+    }),
+    redirect: "manual",
+    headers: {
+      "content-type": "application/json",
+    }.then((response) => window.location.href="/1")
+  });
 }
