@@ -4,14 +4,15 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>ToDoList</title>
   </head>
   <body>
     <h1 style="text-align: center">ToDoList</h1>
     <form style="text-align: center" action="/" method="post">
       <div>
-        <input type="text" name="add" id="add" required />
-        <button type="submit">添加</button>
+        <input type="text" name="add" id="add" required /><button type="submit">
+          添加
+        </button>
       </div>
     </form>
     <div style="text-align: center">
@@ -24,12 +25,7 @@
             ondblclick="this.readOnly='';"
             readonly
             type="text"
-          /><input
-            type="button"
-            name="delete1"
-            value="刪除"
-            onclick="delete1Handler()"
-          />
+          /><button name="delete1" onclick="delete1Handler()">刪除</button>
         </li>
         <li>
           <input
@@ -39,12 +35,7 @@
             ondblclick="this.readOnly='';"
             readonly
             type="text"
-          /><input
-            type="button"
-            name="delete2"
-            value="刪除"
-            onclick="delete2Handler()"
-          />
+          /><button name="delete1" onclick="delete2Handler()">刪除</button>
         </li>
         <li>
           <input
@@ -54,12 +45,7 @@
             ondblclick="this.readOnly='';"
             readonly
             type="text"
-          /><input
-            type="button"
-            name="delete3"
-            value="刪除"
-            onclick="delete3Handler()"
-          />
+          /><button name="delete1" onclick="delete3Handler()">刪除</button>
         </li>
         <li>
           <input
@@ -69,19 +55,13 @@
             ondblclick="this.readOnly='';"
             readonly
             type="text"
-          /><input
-            type="button"
-            name="delete4"
-            value="刪除"
-            onclick="delete4Handler()"
-          />
+          /><button name="delete1" onclick="delete4Handler()">刪除</button>
         </li>
       </ol>
     </div>
     <div style="text-align: center"></div>
 
-    <div id="pageDiv" style="text-align: center">
-    </div>
+    <div id="pageDiv" style="text-align: center"></div>
     <div style="text-align: center">
       第<span id="whichPage">{{.page}}</span>頁
     </div>
