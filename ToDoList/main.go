@@ -20,11 +20,6 @@ func main() {
 	}
 
 	db.AutoMigrate(&Todo{})
-	// u1 := UserInfo{1, "七米", "男", "蛙泳"}
-	// db.Create(&u1)
-	// db.First(&u)
-	// db.Model(&u).Update("hobby", "雙色球")
-	// db.Delete(&u)
 
 	fmt.Println("伺服器開啟")
 	r := gin.Default()
@@ -32,6 +27,8 @@ func main() {
 	r.LoadHTMLGlob("./*")
 	r.Static("/ToDoList", "./")
 	r.GET("/:page", func(c *gin.Context) {
+		var count int64
+		db.Table("todos").Count(&count)
 		if c.Request.RequestURI == "/favicon.ico" {
 			return
 		}
@@ -47,17 +44,14 @@ func main() {
 		var B Todo
 		var C Todo
 		var D Todo
-		// db.First(&A, i*4-3)
-		// db.First(&B, i*4-2)
-		// db.First(&C, i*4-1)
-		// db.First(&D, i*4)
+
 		db.Offset(i*4 - 4).First(&A)
 		db.Offset(i*4 - 3).First(&B)
 		db.Offset(i*4 - 2).First(&C)
 		db.Offset(i*4 - 1).First(&D)
 
 		c.HTML(http.StatusOK, "index.html",
-			gin.H{"one": A.Name, "two": B.Name, "three": C.Name, "four": D.Name, "page": page})
+			gin.H{"one": A.Name, "two": B.Name, "three": C.Name, "four": D.Name, "page": page, "count": count})
 
 	})
 
@@ -65,7 +59,6 @@ func main() {
 		name := c.PostForm("add")
 		fmt.Println("新增", name)
 		db.Create(&Todo{gorm.Model{}, name})
-		c.Redirect(http.StatusMovedPermanently, "/1")
 	})
 
 	// r.POST("/:page", func(c *gin.Context) { //改名
@@ -105,7 +98,7 @@ func main() {
 		db.Model(&t).Update("name", json.NewName)
 	})
 
-	r.DELETE("/:page", func(c *gin.Context) {
+	r.DELETE("/:page", func(c *gin.Context) { //刪除項目
 		var json UdJson
 		c.BindJSON(&json)
 		fmt.Printf("%+v\n", json)

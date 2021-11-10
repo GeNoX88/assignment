@@ -24,60 +24,69 @@
             ondblclick="this.readOnly='';"
             readonly
             type="text"
-          ><input type="button" name="delete1" value="刪除"  onclick="delete1Handler()"/>
+          /><input
+            type="button"
+            name="delete1"
+            value="刪除"
+            onclick="delete1Handler()"
+          />
         </li>
         <li>
           <input
-          onchange="updateHandler(this.id)"
-          id="2"
-          placeholder="{{.two}}"
-          ondblclick="this.readOnly='';"
-          readonly
-          type="text"
-          /><input type="button" name="delete2" value="刪除" onclick="delete2Handler()"/>
+            onchange="updateHandler(this.id)"
+            id="2"
+            placeholder="{{.two}}"
+            ondblclick="this.readOnly='';"
+            readonly
+            type="text"
+          /><input
+            type="button"
+            name="delete2"
+            value="刪除"
+            onclick="delete2Handler()"
+          />
         </li>
         <li>
           <input
-          onchange="updateHandler(this.id)"
-          id="3"
-          placeholder="{{.three}}"
-          ondblclick="this.readOnly='';"
-          readonly
-          type="text"
-          /><input type="button" name="delete3" value="刪除" onclick="delete3Handler()"/>
+            onchange="updateHandler(this.id)"
+            id="3"
+            placeholder="{{.three}}"
+            ondblclick="this.readOnly='';"
+            readonly
+            type="text"
+          /><input
+            type="button"
+            name="delete3"
+            value="刪除"
+            onclick="delete3Handler()"
+          />
         </li>
         <li>
           <input
-          onchange="updateHandler(this.id)"
-          id="4"
-          placeholder="{{.four}}"
-          ondblclick="this.readOnly='';"
-          readonly
-          type="text"
-          /><input type="button" name="delete4" value="刪除" onclick="delete4Handler()"/>
+            onchange="updateHandler(this.id)"
+            id="4"
+            placeholder="{{.four}}"
+            ondblclick="this.readOnly='';"
+            readonly
+            type="text"
+          /><input
+            type="button"
+            name="delete4"
+            value="刪除"
+            onclick="delete4Handler()"
+          />
         </li>
       </ol>
     </div>
     <div style="text-align: center"></div>
 
-    <div style="text-align: center">
-      <input type="button" onclick="javascript:location.href='/1'" value="1" />
-      <input type="button" onclick="javascript:location.href='/2'" value="2" />
-      <input type="button" onclick="javascript:location.href='/3'" value="3" />
-      <input type="button" onclick="javascript:location.href='/4'" value="4" />
-      <input type="button" onclick="javascript:location.href='/5'" value="5" />
-      <input type="button" onclick="javascript:location.href='/6'" value="6" />
-      <input type="button" onclick="javascript:location.href='/7'" value="7" />
-      <input type="button" onclick="javascript:location.href='/8'" value="8" />
-      <input type="button" onclick="javascript:location.href='/9'" value="9" />
-      <input
-        type="button"
-        onclick="javascript:location.href='/10'"
-        value="10"
-      />
+    <div id="pageDiv" style="text-align: center">
     </div>
     <div style="text-align: center">
       第<span id="whichPage">{{.page}}</span>頁
+    </div>
+    <div style="text-align: center">
+      待辦事項數量:<span id="count">{{.count}}</span>
     </div>
     <script src="/ToDoList/index.js"></script>
   </body>

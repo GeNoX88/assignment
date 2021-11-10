@@ -1,5 +1,19 @@
 var whichPage = document.getElementById("whichPage").innerText;
+var count = document.getElementById("count").innerText;
 console.log(`目前在第${whichPage}頁`);
+
+var pages = Math.floor(((count || 1) - 1) / 4) + 1;
+for (i = 0; i < pages; i++) {
+  document
+    .getElementById("pageDiv")
+    .appendChild(
+      document.createElement(
+        "button",
+        (innerText = i + 1),
+        (onclick = `javascript:location.href="/${i + 1}"`)
+      )
+    );
+}
 
 function updateHandler(x) {
   var newName = document.getElementById(x).value;
@@ -9,6 +23,9 @@ function updateHandler(x) {
     headers: {
       "content-type": "application/json",
     },
+  }).then((response) => {
+    window.location.href = "/1";
+    console.log(response.status);
   });
 }
 
@@ -22,8 +39,10 @@ function delete1Handler() {
     headers: {
       "content-type": "application/json",
     },
-
-  }).then((response) => window.location.href="/1");
+  }).then((response) => {
+    window.location.href = "/1";
+    console.log(response.status);
+  });
 }
 function delete2Handler() {
   fetch(`/${whichPage}`, {
@@ -35,7 +54,10 @@ function delete2Handler() {
     redirect: "manual",
     headers: {
       "content-type": "application/json",
-    }.then((response) => window.location.href="/1")
+    },
+  }).then((response) => {
+    window.location.href = "/1";
+    console.log(response.status);
   });
 }
 function delete3Handler() {
@@ -50,7 +72,10 @@ function delete3Handler() {
     redirect: "manual",
     headers: {
       "content-type": "application/json",
-    }.then((response) => window.location.href="/1")
+    },
+  }).then((response) => {
+    window.location.href = "/1";
+    console.log(response.status);
   });
 }
 function delete4Handler() {
@@ -65,6 +90,9 @@ function delete4Handler() {
     redirect: "manual",
     headers: {
       "content-type": "application/json",
-    }.then((response) => window.location.href="/1")
+    },
+  }).then((response) => {
+    window.location.href = "/1";
+    console.log(response.status);
   });
 }
