@@ -18,6 +18,7 @@
     <div style="text-align: center">
       <ol style="display: inline-block">
         <li>
+          <button onclick="toggleHandler(1)">切換</button>
           <input
             onchange="updateHandler(this.id)"
             id="1"
@@ -28,6 +29,7 @@
           /><button name="delete1" onclick="delete1Handler()">刪除</button>
         </li>
         <li>
+          <button onclick="toggleHandler(2)">切換</button>
           <input
             onchange="updateHandler(this.id)"
             id="2"
@@ -38,6 +40,7 @@
           /><button name="delete1" onclick="delete2Handler()">刪除</button>
         </li>
         <li>
+          <button onclick="toggleHandler(3)">切換</button>
           <input
             onchange="updateHandler(this.id)"
             id="3"
@@ -48,6 +51,7 @@
           /><button name="delete1" onclick="delete3Handler()">刪除</button>
         </li>
         <li>
+          <button onclick="toggleHandler(4)">切換</button>
           <input
             onchange="updateHandler(this.id)"
             id="4"
@@ -72,7 +76,9 @@
     <div id="cpPage" style="text-align: center">{{.cpPage}}</div>
     <div style="text-align: center">
       <button onclick="javascript:window.location.href='/1'">未完成</button
-      ><button onclick="javascript:window.location.href='/completed/1'">已完成</button>
+      ><button onclick="javascript:window.location.href='/completed/1'">
+        已完成
+      </button>
     </div>
     <div>{{.T}}</div>
     <script src="/ToDoList/index.js"></script>

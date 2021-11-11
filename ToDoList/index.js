@@ -51,6 +51,23 @@ if (cpPage == "false") {
   }
 }
 
+function toggleHandler(x) {
+  fetch(`/changeState/${whichPage}`, {
+    method: "PUT",
+    body: JSON.stringify({
+      WhichPage: whichPage,
+      Number: `${x}`,
+      cpPage: cpPage,
+    }),
+    headers: {
+      "content-type": "application/json",
+    },
+  }).then((response) => {
+    window.location.href = "/1";
+    console.log(response.status);
+  });
+}
+
 function updateHandler(x) {
   const newName = document.getElementById(x).value;
   fetch(`/${whichPage}`, {
@@ -118,7 +135,6 @@ function delete3Handler() {
     body: JSON.stringify({
       WhichPage: whichPage,
       Number: "3",
-      NewName: newName,
       cpPage: cpPage,
     }),
     redirect: "manual",
