@@ -59,15 +59,22 @@
         </li>
       </ol>
     </div>
-    <div style="text-align: center"></div>
-
     <div id="pageDiv" style="text-align: center"></div>
     <div style="text-align: center">
       第<span id="whichPage">{{.page}}</span>頁
     </div>
     <div style="text-align: center">
-      待辦事項數量:<span id="count">{{.count}}</span>
+      未完成數量:<span id="count">{{.count}}</span>，已完成數量:<span
+        id="completed"
+        >{{.completed}}</span
+      >
     </div>
+    <div id="cpPage" style="text-align: center">{{.cpPage}}</div>
+    <div style="text-align: center">
+      <button onclick="javascript:window.location.href='/1'">未完成</button
+      ><button onclick="javascript:window.location.href='/completed/1'">已完成</button>
+    </div>
+    <div>{{.T}}</div>
     <script src="/ToDoList/index.js"></script>
   </body>
 </html>

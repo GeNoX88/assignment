@@ -1,25 +1,66 @@
-var whichPage = document.getElementById("whichPage").innerText;
-var count = document.getElementById("count").innerText;
+const whichPage = document.getElementById("whichPage").innerText;
+let count = document.getElementById("count").innerText;
+let completed = document.getElementById("completed").innerText;
+const cpPage = document.getElementById("cpPage").innerText;
 console.log(`目前在第${whichPage}頁`);
 
-var pages = Math.floor(((count || 1) - 1) / 4) + 1;
-for (i = 0; i < pages; i++) {
-  document
-    .getElementById("pageDiv")
-    .appendChild(
-      document.createElement(
-        "button",
-        (innerText = i + 1),
-        (onclick = `javascript:location.href="/${i + 1}"`)
-      )
-    );
+// window.onload = function () {
+//   fetch("/onloadData", {
+//     method: "DELETE",
+//     body: JSON.stringify({
+//       WhichPage: whichPage,
+//       Number: "1",
+//       cpPage: cpPage,
+//     }),
+//   })
+//     .then((response) => {
+//       console.log(response);
+//       return response.json();
+//     })
+//     .then((response) => console.log(response));
+// };
+
+let pages;
+if (cpPage == "false") {
+  if (count === "0") {
+    count = 1;
+  }
+  pages = Math.floor((count - 1) / 4) + 1;
+} else {
+  if (completed === "0") {
+    completed = 1;
+  }
+  pages = Math.floor((completed - 1) / 4) + 1;
+}
+
+if (cpPage == "false") {
+  for (i = 0; i < pages; i++) {
+    const a = document.createElement("a");
+    a.innerText = i + 1;
+    a.href = `/${i + 1}`;
+    a.style = "margin:3px";
+    document.getElementById("pageDiv").appendChild(a);
+  }
+} else if (cpPage == "true") {
+  for (i = 0; i < pages; i++) {
+    const a = document.createElement("a");
+    a.innerText = i + 1;
+    a.href = `/completed/${i + 1}`;
+    a.style = "margin:3px";
+    document.getElementById("pageDiv").appendChild(a);
+  }
 }
 
 function updateHandler(x) {
-  var newName = document.getElementById(x).value;
+  const newName = document.getElementById(x).value;
   fetch(`/${whichPage}`, {
     method: "PUT",
-    body: JSON.stringify({ WhichPage: whichPage, Number: x, NewName: newName }),
+    body: JSON.stringify({
+      WhichPage: whichPage,
+      Number: x,
+      NewName: newName,
+      cpPage: cpPage,
+    }),
     headers: {
       "content-type": "application/json",
     },
@@ -29,12 +70,22 @@ function updateHandler(x) {
   });
 }
 
+let deleteURL = (function () {
+  if (cpPage === "false") {
+    return `/${whichPage}`;
+  } else if (cpPage === "true") {
+    return `/completed/${whichPage}`;
+  }
+})();
+
+console.log(deleteURL);
 function delete1Handler() {
-  fetch(`/${whichPage}`, {
+  fetch(deleteURL, {
     method: "DELETE",
     body: JSON.stringify({
       WhichPage: whichPage,
       Number: "1",
+      cpPage: cpPage,
     }),
     headers: {
       "content-type": "application/json",
@@ -45,11 +96,12 @@ function delete1Handler() {
   });
 }
 function delete2Handler() {
-  fetch(`/${whichPage}`, {
+  fetch(deleteURL, {
     method: "DELETE",
     body: JSON.stringify({
       WhichPage: whichPage,
       Number: "2",
+      cpPage: cpPage,
     }),
     redirect: "manual",
     headers: {
@@ -61,13 +113,13 @@ function delete2Handler() {
   });
 }
 function delete3Handler() {
-  var newName = document.getElementById(3).value;
-  fetch(`/${whichPage}`, {
+  fetch(deleteURL, {
     method: "DELETE",
     body: JSON.stringify({
       WhichPage: whichPage,
       Number: "3",
       NewName: newName,
+      cpPage: cpPage,
     }),
     redirect: "manual",
     headers: {
@@ -79,13 +131,13 @@ function delete3Handler() {
   });
 }
 function delete4Handler() {
-  var newName = document.getElementById(4).value;
-  fetch(`/${whichPage}`, {
+  fetch(deleteURL, {
     method: "DELETE",
     body: JSON.stringify({
       WhichPage: whichPage,
       Number: "4",
       NewName: newName,
+      cpPage: cpPage,
     }),
     redirect: "manual",
     headers: {
