@@ -3,7 +3,8 @@ let count = document.getElementById("count").innerText;
 let completed = document.getElementById("completed").innerText;
 const cpPage = document.getElementById("cpPage").innerText;
 console.log(`目前在第${whichPage}頁`);
-
+const record = document.getElementById("record").innerText;
+const add = document.getElementById("add").value;
 // window.onload = function () {
 //   fetch("/onloadData", {
 //     method: "DELETE",
@@ -21,7 +22,7 @@ console.log(`目前在第${whichPage}頁`);
 // };
 
 let pages;
-if (cpPage == "false") {
+if (cpPage === "false") {
   if (count === "0") {
     count = 1;
   }
@@ -33,38 +34,39 @@ if (cpPage == "false") {
   pages = Math.floor((completed - 1) / 4) + 1;
 }
 
-if (cpPage == "false") {
+if (cpPage === "false") {
   for (i = 0; i < pages; i++) {
     const a = document.createElement("a");
     a.innerText = i + 1;
-    a.href = `/${i + 1}`;
+    a.href = `/ncp/${i + 1}/${record}`;
     a.style = "margin:3px";
     document.getElementById("pageDiv").appendChild(a);
   }
-} else if (cpPage == "true") {
+} else if (cpPage === "true") {
   for (i = 0; i < pages; i++) {
     const a = document.createElement("a");
     a.innerText = i + 1;
-    a.href = `/completed/${i + 1}`;
+    a.href = `/cp/${i + 1}/${record}`;
     a.style = "margin:3px";
     document.getElementById("pageDiv").appendChild(a);
   }
 }
 
 function toggleHandler(x) {
-  fetch(`/changeState/${whichPage}`, {
+  fetch("/changeState", {
     method: "PUT",
     body: JSON.stringify({
-      WhichPage: whichPage,
-      Number: `${x}`,
-      cpPage: cpPage,
+      Id: x,
     }),
     headers: {
       "content-type": "application/json",
     },
-  }).then((response) => {
-    window.location.href = "/1";
-    console.log(response.status);
+  }).then(() => {
+    if (cpPage === "false") {
+      window.location.href = `/ncp/1/${record}`;
+    } else if (cpPage === "true") {
+      window.location.href = `/cp/1/${record}`;
+    }
   });
 }
 
@@ -81,86 +83,56 @@ function updateHandler(x) {
     headers: {
       "content-type": "application/json",
     },
-  }).then((response) => {
-    window.location.href = "/1";
-    console.log(response.status);
+  }).then(() => {
+    if (cpPage === "false") {
+      window.location.href = `/${whichPage}`;
+    } else {
+      window.location.href = `/completed/${whichPage}`;
+    }
   });
 }
 
-let deleteURL = (function () {
-  if (cpPage === "false") {
-    return `/${whichPage}`;
-  } else if (cpPage === "true") {
-    return `/completed/${whichPage}`;
+function deleteHandler(x) {
+  fetch("/", {
+    method: "DELETE",
+    body: JSON.stringify({
+      WhichPage: whichPage,
+      Number: `${x}`,
+      cpPage: cpPage,
+    }),
+    headers: {
+      "content-type": "application/json",
+    },
+  }).then(() => {
+    window.location.href = "/1";
+  });
+}
+
+function addHandler(record) {
+  console.log(record)
+  fetch("/add", {
+    method: "POST",
+    body: JSON.stringify({
+      Name: "gggg" 
+    }),
+    headers: {
+      "content-type": "application/json",
+    },
+  }).then(() => {
+    window.location.href = `/ncp/1/${record}`;
+  });
+}
+
+function recordHandler(x) {
+  if (typeof x === "number") {
+    if (x <= 0 || x % 1 !== 0) {
+      alert("資料筆數需為正整數");
+      return;
+    }
+    if (cpPage === "false") {
+      window.location.href = `/ncp/1/${x}`;
+    } else if (cpPage === "true") {
+      window.location.href = `/cp/1/${x}`;
+    }
   }
-})();
-
-console.log(deleteURL);
-function delete1Handler() {
-  fetch(deleteURL, {
-    method: "DELETE",
-    body: JSON.stringify({
-      WhichPage: whichPage,
-      Number: "1",
-      cpPage: cpPage,
-    }),
-    headers: {
-      "content-type": "application/json",
-    },
-  }).then((response) => {
-    window.location.href = "/1";
-    console.log(response.status);
-  });
-}
-function delete2Handler() {
-  fetch(deleteURL, {
-    method: "DELETE",
-    body: JSON.stringify({
-      WhichPage: whichPage,
-      Number: "2",
-      cpPage: cpPage,
-    }),
-    redirect: "manual",
-    headers: {
-      "content-type": "application/json",
-    },
-  }).then((response) => {
-    window.location.href = "/1";
-    console.log(response.status);
-  });
-}
-function delete3Handler() {
-  fetch(deleteURL, {
-    method: "DELETE",
-    body: JSON.stringify({
-      WhichPage: whichPage,
-      Number: "3",
-      cpPage: cpPage,
-    }),
-    redirect: "manual",
-    headers: {
-      "content-type": "application/json",
-    },
-  }).then((response) => {
-    window.location.href = "/1";
-    console.log(response.status);
-  });
-}
-function delete4Handler() {
-  fetch(deleteURL, {
-    method: "DELETE",
-    body: JSON.stringify({
-      WhichPage: whichPage,
-      Number: "4",
-      NewName: newName,
-      cpPage: cpPage,
-    }),
-    redirect: "manual",
-    headers: {
-      "content-type": "application/json",
-    },
-  }).then((response) => {
-    window.location.href = "/1";
-    console.log(response.status);
-  });
 }
