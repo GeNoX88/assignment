@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/ToDoList/favicon.ico" type="image/x-icon" />
+    <title>ToDoList</title>
+  </head>
+  <body>
+    <h1 style="text-align: center">ToDoList</h1>
+    <form style="text-align: center" id="myForm">
+      <input type="text" name="add" required />
+      <button onclick="addHandler({{.record}})">添加</button>
+    </form>
+    <div style="text-align: center">
+      <ul style="display: inline-block">
+        {{ range $i, $v := .T }}
+        <li>
+          <button onclick="toggleHandler({{ $v.Model.ID }})">切換</button>        
+          <input 
+          type="text"
+          placeholder={{ $v.Name }} 
+          onchange=updateHandler({{ $v.Model.ID }})
+          readonly
+          ondblclick="this.readOnly=''"
+          onblur="this.readOnly='true'"
+          id= {{ $v.Model.ID }}
+          />
+          <button onclick="deleteHandler({{ $v.Model.ID }})">刪除</button>
+        </li>
+        {{end}}
+      </ol>
+    </div>
+    <div id="pageDiv" style="text-align: center"></div>
+    <div style="text-align: center">
+      未完成數量:<span id="count">{{.count}}</span>，已完成數量:<span
+      id="completed"
+      >{{.completed}}</span
+      >
+    </div>
+    <div style="text-align: center">
+      第<span id="whichPage">1</span>頁
+    </div>
+    <div style="text-align: center">
+      <button onclick="window.location.href='/ncp/1/{{.record}}'">未完成</button
+        ><button onclick="window.location.href='/cp/1/{{.record}}'">
+          已完成
+        </button>
+      </div>
+      <div style="text-align: center">
+        {{ if .cpPage }}
+        您正於已完成頁
+        {{ else }}
+        您正於未完成頁
+        {{ end }}
+      </div>
+      <div id="cpPage" style="text-align: center">{{.cpPage}}</div>
+      <div style="text-align: center">每頁顯示<span id="record">{{.record}}</span>筆資料</div>
+      <div style="text-align: center">您可以輸入每頁想顯示幾筆資料：<input type="number" min="0" oninput="validity.valid||(value='');" onchange="recordHandler(this.value)" /><div>
+      <script src="/ToDoList/index.js"></script>
+      </body>
+</html>
