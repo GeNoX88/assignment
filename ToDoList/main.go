@@ -31,7 +31,7 @@ func main() {
 		var count int64     //未完成數
 		var completed int64 //已完成數
 
-		var cpPage bool = c.Param("cpPage") == "cp"
+		var cpPage string = c.Param("cpPage")
 		record, err := strconv.Atoi(c.Param("record"))
 		if err != nil {
 			log.Println("", err)
@@ -58,13 +58,20 @@ func main() {
 			return
 		}
 		T := []Todo{}
-
-		if err = db.Table("todos").Where("completed", cpPage).Offset(record * (i - 1)).Limit(record).Find(&T).Error; err != nil {
-			log.Println("GET路由dB拿資料報錯", err)
-			c.Redirect(http.StatusMovedPermanently, "/ncp/1/4")
-			return
+		if cpPage == "all" {
+			if err = db.Table("todos").Offset(record * (i - 1)).Limit(record).Find(&T).Error; err != nil {
+				log.Println("GET路由dB拿all資料報錯", err)
+				c.Redirect(http.StatusMovedPermanently, "/all/1/4")
+				return
+			}
+		} else {
+			cpBool := cpPage == "cp"
+			if err = db.Table("todos").Where("completed", cpBool).Offset(record * (i - 1)).Limit(record).Find(&T).Error; err != nil {
+				log.Println("GET路由dB拿ncp或cp資料報錯", err)
+				c.Redirect(http.StatusMovedPermanently, "/all/1/4")
+				return
+			}
 		}
-
 		c.HTML(http.StatusOK, "index.html",
 			gin.H{"T": T, "page": i, "count": count, "completed": completed, "cpPage": cpPage, "record": record})
 	})
@@ -81,7 +88,11 @@ func main() {
 		}
 	})
 	r.PUT("/changeName", func(c *gin.Context) { //改名
-		var json UdJson
+		type J struct {
+			Id      uint
+			NewName string
+		}
+		var json J
 		if err := c.BindJSON(&json); err != nil {
 			log.Println("事項做改名的BindJSON報錯:", err)
 			return
@@ -102,36 +113,34 @@ func main() {
 	})
 
 	r.PUT("/changeState", func(c *gin.Context) { //改狀態
-		var json UdJson
+		var json Todo
 		if err := c.BindJSON(&json); err != nil {
 			log.Println("事項切換完成狀態的BindJSON報錯:", err)
 			return
 		}
 		fmt.Printf("切換完成狀態 json:%+v\n", json)
 
-		var cpPage bool = json.CpPage == "true"
-
 		var t Todo
-		if err := db.First(&t, json.Id).Error; err != nil {
+		if err := db.First(&t, json.Model.ID).Error; err != nil {
 			log.Println("dB找出要改哪一筆事件的完成狀態時First函數報錯:", err)
 			return
 		}
-		if err := db.Model(&t).Update("completed", !cpPage).Error; err != nil {
+		if err := db.Model(&t).Update("completed", !json.Completed).Error; err != nil {
 			log.Println("dB改資料的完成狀態時Update函數報錯:", err)
 			return
 		}
 	})
 
 	r.DELETE("/deleteTodo", func(c *gin.Context) { //刪除項目
-		var json UdJson
+		var json Todo
 		if err := c.BindJSON(&json); err != nil {
 			log.Println("項目刪除的路由中BindJson報錯", err)
 			return
 		}
-		fmt.Printf("事件刪除路由json:%#v\n", json)
+		fmt.Printf("事件刪除路由json:%+v\n", json)
 
 		var t Todo
-		if err := db.Debug().First(&t, json.Id).Error; err != nil {
+		if err := db.Debug().First(&t, json.Model.ID).Error; err != nil {
 			log.Println("dB找出要刪除的todo時報錯:", err)
 			return
 		}
@@ -156,10 +165,4 @@ type Todo struct {
 	gorm.Model
 	Name      string
 	Completed bool
-}
-
-type UdJson struct {
-	NewName string
-	CpPage  string
-	Id      uint
 }
