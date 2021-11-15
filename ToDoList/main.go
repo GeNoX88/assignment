@@ -39,22 +39,20 @@ func main() {
 		}
 		if err := db.Debug().Table("todos").Where("completed", false).Where("deleted_at", nil).Count(&count).Error; err != nil {
 			log.Println("未完成事項的頁面撈未完成數count報錯", err)
-			c.Redirect(http.StatusMovedPermanently, "/ncp/1/4")
+			c.Redirect(http.StatusMovedPermanently, "/all/1/4")
 			return
 		}
 
 		if err := db.Debug().Table("todos").Where("completed", true).Where("deleted_at", nil).Count(&completed).Error; err != nil {
 			log.Println("未完成事項頁面 撈已完成事項數量報錯", err)
-			c.Redirect(http.StatusMovedPermanently, "/ncp/1/4")
+			c.Redirect(http.StatusMovedPermanently, "/all/1/4")
 			return
 		}
 
-		page := c.Param("page")
-
-		i, err := strconv.Atoi(page)
+		i, err := strconv.Atoi(c.Param("page"))
 		if err != nil {
 			log.Println("page做Atoi時報錯", err)
-			c.Redirect(http.StatusMovedPermanently, "/ncp/1/4")
+			c.Redirect(http.StatusMovedPermanently, "/all/1/4")
 			return
 		}
 		T := []Todo{}
@@ -151,8 +149,8 @@ func main() {
 	})
 
 	r.NoRoute(func(c *gin.Context) {
-		fmt.Println("NoRoute已作動   重定向至 /ncp/1/4")
-		c.Redirect(http.StatusMovedPermanently, "/ncp/1/4")
+		fmt.Println("NoRoute已作動   重定向至 /all/1/4")
+		c.Redirect(http.StatusMovedPermanently, "/all/1/4")
 	})
 
 	if err := r.Run(":8080"); err != nil {

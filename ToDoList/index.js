@@ -7,7 +7,7 @@ let pages;
 if (cpPage === "all") {
   if (count + completed == 0) {
     pages = 1;
-  } else pages = Math.floor((count - 1) / record) + 1;
+  } else pages = Math.floor((count + completed  - 1) / record) + 1;
 } else if (cpPage === "ncp") {
   if (count === "0") {
     pages = 1;
