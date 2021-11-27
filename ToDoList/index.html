@@ -10,7 +10,7 @@
   <body>
     <h1 style="text-align: center">ToDoList</h1>
     <form style="text-align: center" id="myForm">
-      <input type="text" name="add" required /><button onclick="addHandler({{.record}})">添加</button>
+      <input type="text" name="add" required /><button type="button" onclick="addHandler()">添加</button>
     </form>
     <div style="text-align: center;margin-top: 20px;">
       {{ if eq .cpPage "all" }}
@@ -60,7 +60,6 @@
       已完成
       </button>
     </div>
-    <div id="cpPage" style="display: none;">{{.cpPage}}</div>
     <div style="text-align: center">每頁顯示<span id="record">{{.record}}</span>筆資料</div>
     <div style="text-align: center">您可以輸入每頁想顯示幾筆資料：<input type="number" min="0" oninput="validity.valid||(value='');" onchange="recordHandler(this.value)" /><div>
     <script src="/ToDoList/index.js"></script>

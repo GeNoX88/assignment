@@ -26,7 +26,7 @@ func main() {
 	r := gin.Default()
 	r.LoadHTMLGlob("./*")
 	r.Static("/ToDoList", "./")
-
+	mapH := gin.H{}
 	r.GET("/:cpPage/:page/:record", func(c *gin.Context) { //連到已完成事項頁面
 		var count int64     //未完成數
 		var completed int64 //已完成數
@@ -70,8 +70,12 @@ func main() {
 				return
 			}
 		}
-		c.HTML(http.StatusOK, "index.html",
-			gin.H{"T": T, "page": i, "count": count, "completed": completed, "cpPage": cpPage, "record": record})
+		mapH = gin.H{"T": T, "count": count, "completed": completed, "cpPage": cpPage, "page": i, "record": record}
+		c.HTML(http.StatusOK, "index.html", mapH)
+	})
+
+	r.GET("/onload", func(c *gin.Context) {
+		c.JSON(200, mapH)
 	})
 	r.POST("/add", func(c *gin.Context) { // 添加事項
 		name := c.PostForm("add")
