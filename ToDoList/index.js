@@ -5,9 +5,9 @@ let record = document.getElementById("record").innerText;
 let whichPage = document.getElementById("whichPage").innerText;
 let pages;
 if (cpPage === "all") {
-  if (count + completed == 0) {
+  if (parseInt(count) + parseInt(completed) == 0) {
     pages = 1;
-  } else pages = Math.floor((count + completed  - 1) / record) + 1;
+  } else pages = Math.floor((parseInt(count) + parseInt(completed)  - 1) / record) + 1;
 } else if (cpPage === "ncp") {
   if (count === "0") {
     pages = 1;
